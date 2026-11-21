@@ -17,3 +17,10 @@ A 100% self-hosted, offline-first **Hotel & Restaurant POS** built on **Laravel 
 | **Cashier Desk** | `2222` | Billing Counter, Parcel Orders, Discount, Table Transfer, Cash/UPI/Split Settlement & 80mm/58mm Thermal Bill Print |
 | **Main Kitchen** | `3333` | Live KDS Screen (3s LAN auto-refresh + alert chime), Cooking/Ready status, 86 Stock Out |
 | **Waiter Raju / Amit** | `4444` / `5555` | Mobile Table Floor Map, Fast Menu + Short Code Order Punching, Send KOT & Request Bill |
+
+## Project Documentation
+- [Product Requirements Document (PRD)](docs/prd.md)
+- [Technical Requirements Document (TRD)](docs/trd.md)
+- [Implementation Plan](docs/implementation-plan.md)
+- [Testing Strategy](docs/testing-strategy.md)
+- [Deployment Plan](docs/deployment-plan.md)
