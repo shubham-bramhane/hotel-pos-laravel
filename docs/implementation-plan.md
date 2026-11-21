@@ -1,76 +1,55 @@
-# Implementation Plan — Royal Hotel & Restaurant LAN POS
+# Implementation Plan — Royal Hotel & Restaurant Hybrid POS
 
 ## 1. Delivery Approach
 
-The project follows a vertical-slice, offline-first delivery model: establish the relational schema and transactional POS domain engine first, layer role-based UIs and live LAN polling on top, add thermal printing and owner controls, and package one-click Windows LAN deployment scripts.
+The platform was delivered in modular vertical slices: first establishing a 100% offline-resilient LAN POS core (Phases 1–6), then extending it into a **75% Offline / 25% Cloud AI Hybrid Platform** with interactive offline SVG charts, nightly signed cloud sync, dual-mode Cloud Hub multi-branch benchmarking, Google Gemini AI executive insights, and tokenized Investor Share Portals (Phase 7).
 
 ---
 
-## 2. Phase Breakdown & Status
+## 2. Completed Milestones
 
-### Phase 1 — Foundation, Schema & Auth *(Completed)*
-- [x] Scaffold Laravel 13 project (`composer.json`, `bootstrap/app.php`, `routes/web.php`).
-- [x] Create unified POS migration (`2026_11_20_000001_create_hotel_pos_tables.php`) for all 9 tables: `staff_users`, `dining_tables`, `menu_categories`, `menu_items`, `orders`, `kots`, `order_items`, `audit_logs`, `hotel_settings`.
-- [x] Implement Eloquent models (`StaffUser`, `DiningTable`, `MenuCategory`, `MenuItem`, `Order`, `Kot`, `OrderItem`, `AuditLog`, `HotelSetting`) and relationships.
-- [x] Implement seed data (`DatabaseSeeder`) with default settings, 5 staff PINs (`1111`–`5555`), 14 tables across 3 sections, 6 categories, and 29 Indian restaurant dishes.
-- [x] Build fast PIN authentication (`AuthPinController`) and RBAC middleware (`EnsureStaffAuthenticated`, aliased as `pos.auth`).
+### Phase 1–6 — Core 75% Offline LAN POS *(Completed)*
+- [x] **Schema & Seeders**: 9 core POS tables (`2026_11_20_000001_create_hotel_pos_tables.php`) + realistic Indian restaurant seed data (5 staff PINs, 14 tables, 6 categories, 29 dishes).
+- [x] **Fast PIN Auth & RBAC**: `AuthPinController` + `EnsureStaffAuthenticated` middleware (`pos.auth`).
+- [x] **Transactional POS Engine**: `App\Services\PosService` with `DB::transaction()` across table orders, parcels, KOTs, cancellations, discounts, transfers, CGST/SGST/rounding, split payments, and anti-theft audit logs.
+- [x] **4 Role Interfaces + Thermal Print**: Waiter mobile floor map, 3s live Kitchen KDS with chime, Counter billing workspace, 58mm/80mm thermal Bill & KOT layouts, and Owner dashboard + CSV export + JSON backup.
+- [x] **Windows LAN Packaging**: `Activate-Hotel-POS-6808.bat`, `Open-Hotel-POS-App.vbs`, `Create-Hotel-POS-Shortcut.bat`, PWA `manifest.json`.
 
-### Phase 2 — Core POS Domain Service *(Completed)*
-- [x] Build `App\Services\PosService` with `DB::transaction()` guarantees:
-  - Table order opening (`openOrGetTableOrder`) & Takeaway creation (`createTakeawayOrder`).
-  - Cart-to-KOT creation (`addItemsAndCreateKot`) with item price/name snapshots.
-  - KOT status updates (`updateKotStatus`) and bill requests (`requestBill`).
-  - Item cancellation (`cancelOrderItem`), full order cancellation (`cancelOrder`), flat/% discount (`applyDiscount`), and table transfer (`transferTable`).
-  - Payment settlement (`settleOrder` for Cash/UPI/Card/Split) and table release.
-  - GST (CGST + SGST) and rupee rounding engine (`recalculateOrder`) + Indian currency formatter (`formatINR`).
-  - Audit logging (`logAudit`) across all operational mutations.
-
-### Phase 3 — Waiter Mobile POS & Live Kitchen KDS *(Completed)*
-- [x] Build `WaiterController` + views (`waiter/index.blade.php`, `waiter/table.blade.php`) with floor map, short-code/name menu search, cart builder, and bill request button.
-- [x] Implement live table status polling endpoint (`GET /api/waiter/tables`).
-- [x] Build `KitchenController` + view (`kitchen/index.blade.php`) with live 3-second polling (`GET /api/kitchen/live`), new-order alert chime, status transitions, and 86 out-of-stock toggles.
-
-### Phase 4 — Counter Billing & Thermal Printing *(Completed)*
-- [x] Build `CounterController` + view (`counter/index.blade.php`) supporting dine-in tables, takeaway parcels, quick item punching, table transfer, item/order cancellation with mandatory reason, discounts, and Cash/UPI/Card/Split settlement.
-- [x] Implement live counter summary polling (`GET /api/counter/live`).
-- [x] Build 58mm / 80mm print-ready thermal templates (`print/bill.blade.php` with consolidated line items and `print/kot.blade.php`).
-
-### Phase 5 — Owner Dashboard, Admin CRUD & Anti-Theft Controls *(Completed)*
-- [x] Build `OwnerController` + views (`owner/dashboard`, `owner/menu`, `owner/tables`, `owner/staff`, `owner/audit`, `owner/settings`).
-- [x] Implement date-range KPI analytics (`today`, `yesterday`, `7days`, `month`, `custom`), top-selling dishes, and waiter performance breakdowns.
-- [x] Add Excel-friendly UTF-8 BOM Sales CSV export (`GET /owner/export-sales`).
-- [x] Add one-click full JSON database backup download (`POST /owner/backup`).
-
-### Phase 6 — Packaging, LAN Launchers, Pitch Assets & Verification *(Completed)*
-- [x] Configure PWA manifest (`public/manifest.json`) and app icon (`public/icon.svg`).
-- [x] Build Windows deployment & launcher scripts: `Activate-Hotel-POS-6808.bat`, `Open-Hotel-POS-App.vbs`, `Create-Hotel-POS-Shortcut.bat`.
-- [x] Add end-to-end automated feature test (`tests/Feature/HotelPosFlowTest.php`).
-- [x] Add commercial sales collateral (`pitch/pitch-deck.html`, `pitch/Royal_Hotel_LAN_POS_Pitch_Deck.pdf`).
+### Phase 7 — 25% Cloud AI Analytics, Nightly Sync & Investor Portal *(Completed)*
+- [x] **Hybrid Schema & Config**: `2026_11_21_211625_create_analytics_and_sync_tables.php` (`outlets`, `daily_analytics_snapshots`, `ai_insight_reports`, `investor_share_links`, `cloud_sync_logs`), `config/pos.php`, `.env.example`, and `HotelSetting` defaults.
+- [x] **Offline-Capable SVG Charts (`public/js/pos-charts.js`)**: Zero-CDN interactive Revenue Area/Bar Trend Graph, Payment Split Pie/Donut Chart, Menu Category Mix Pie/Donut Chart, Peak Dining Hours Bar Chart, and Horizontal Comparison Bars.
+- [x] **Analytics Aggregation Engine (`AnalyticsService`)**: SHA-256 checksummed daily rollups, growth % vs prior period, Annualized Run Rate (ARR), peak-hour detection, Veg/Non-Veg mix, and multi-outlet benchmarking.
+- [x] **Google Gemini AI Insights (`GeminiAnalyticsService`)**: Integrates Gemini Interactions API v1 (`gemini-4-hydrogen`, JSON Schema structured output) with automatic Offline Statistical Engine fallback.
+- [x] **Dual-Mode Nightly Cloud Sync (`CloudSyncService` + `SyncPosCloudCommand` + `CloudSyncApiController`)**:
+  - Outbound signed sync (`Authorization: Bearer` + HMAC-SHA256 `X-POS-Signature`), offline failure retry queue, and `01:00 AM` scheduler (`routes/console.php` + `Setup-Nightly-Cloud-Sync.bat`).
+  - Inbound Cloud Hub API (`POST /api/cloud/sync`, `GET /api/cloud/health`) for consolidating multiple hotels/branches.
+- [x] **Owner AI Analytics UI & Investor Share Portal**:
+  - `resources/views/owner/analytics.blade.php` + updated `owner/settings.blade.php` & `layouts/pos.blade.php`.
+  - Public read-only Investor Portal (`resources/views/investor/report.blade.php` & `unavailable.blade.php`) with view tracking, revocation, expiry, and print-to-PDF layout.
+- [x] **Automated Test Suite & Pitch Deck**: `tests/Feature/HybridAnalyticsAndSyncTest.php` + updated 11-slide Pitch Deck HTML & PDF.
 
 ---
 
-## 3. Future Roadmap (Phase 7+ Enhancements)
+## 3. Upcoming Roadmap (Phase 8+)
 
-| Priority | Item | Technical Notes |
+| Priority | Feature | Technical Notes |
 |---|---|---|
-| P1 | Concurrency-safe `order_no` / `kot_no` generator | Use a locked daily counter row or `MAX(id)` + unique retry loop inside `PosService` to prevent collisions under simultaneous KOT submissions. |
-| P1 | Login rate limiting & PIN security hardening | Apply `throttle:10,1` middleware to `POST /login` to mitigate PIN guessing on LAN devices. |
-| P1 | Expand automated test coverage | Add unit tests for `PosService` math/edge cases and negative RBAC/validation feature tests (see `docs/testing-strategy.md`). |
-| P2 | JSON backup restore utility | Add Owner-only restore workflow (with confirmation & schema validation) to complement `POST /owner/backup`. |
-| P2 | Dynamic UPI QR code on thermal bills | Render offline SVG QR code from `upi://pay?pa=<upi_id>&am=<grand_total>` on `print/bill.blade.php` when `upi_id` is configured. |
-| P3 | Split-bill / table-merge support | Allow splitting one table order into multiple bills or merging two occupied tables. |
+| P1 | Concurrency-safe `order_no` / `kot_no` sequence | Add row-locked daily counter to eliminate collisions under simultaneous waiter submissions. |
+| P1 | Login PIN rate limiting & hashing | Apply `throttle:10,1` on `POST /login` and migrate PINs to salted hash lookup. |
+| P2 | Dynamic UPI QR code on thermal bills | Render offline SVG QR from `upi://pay?pa=<upi_id>&am=<grand_total>` on `print/bill.blade.php`. |
+| P2 | Per-outlet secret keys in Cloud Hub UI | Allow Cloud Hub owners to provision and rotate individual `sync_secret_hash` tokens per franchisee outlet. |
+| P2 | Automated JSON backup restore utility | Guided Owner-only restore workflow validating schema version before import. |
+| P3 | Split-bill & table-merge operations | Split a single table order across multiple bills or merge two active tables. |
 
 ---
 
-## 4. Component Ownership Map
+## 4. Module Ownership Map
 
 | Module | Files |
 |---|---|
-| Domain Logic | `app/Services/PosService.php` |
-| Auth & RBAC | `app/Http/Controllers/AuthPinController.php`, `app/Http/Middleware/EnsureStaffAuthenticated.php`, `app/Models/StaffUser.php` |
-| Waiter Module | `app/Http/Controllers/WaiterController.php`, `resources/views/waiter/` |
-| Kitchen Module | `app/Http/Controllers/KitchenController.php`, `resources/views/kitchen/` |
-| Counter & Print | `app/Http/Controllers/CounterController.php`, `resources/views/counter/`, `resources/views/print/` |
-| Owner Module | `app/Http/Controllers/OwnerController.php`, `resources/views/owner/` |
-| Shared UI & Styles | `resources/views/layouts/pos.blade.php`, `public/css/pos.css` |
-| Windows LAN Ops | `Activate-Hotel-POS-6808.bat`, `Open-Hotel-POS-App.vbs`, `Create-Hotel-POS-Shortcut.bat` |
+| Offline POS Domain | `app/Services/PosService.php`, `app/Http/Controllers/{Waiter,Kitchen,Counter,Owner,AuthPin}Controller.php` |
+| Hybrid Analytics & Charts | `app/Services/AnalyticsService.php`, `public/js/pos-charts.js`, `resources/views/owner/analytics.blade.php` |
+| Gemini AI Engine | `app/Services/GeminiAnalyticsService.php`, `app/Models/AiInsightReport.php` |
+| Nightly Cloud Sync & Hub API | `app/Services/CloudSyncService.php`, `app/Console/Commands/SyncPosCloudCommand.php`, `app/Http/Controllers/CloudSyncApiController.php`, `routes/api.php`, `Setup-Nightly-Cloud-Sync.bat` |
+| Investor Executive Portal | `app/Http/Controllers/InvestorPortalController.php`, `app/Models/InvestorShareLink.php`, `resources/views/investor/` |
+| Pitch & Engineering Docs | `docs/{prd,trd,implementation-plan,testing-strategy,deployment-plan}.md`, `pitch/pitch-deck.html`, `pitch/Royal_Hotel_LAN_POS_Pitch_Deck.pdf` |

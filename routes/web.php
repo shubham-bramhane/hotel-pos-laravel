@@ -1,7 +1,9 @@
 <?php
 
+use App\Http\Controllers\AnalyticsController;
 use App\Http\Controllers\AuthPinController;
 use App\Http\Controllers\CounterController;
+use App\Http\Controllers\InvestorPortalController;
 use App\Http\Controllers\KitchenController;
 use App\Http\Controllers\OwnerController;
 use App\Http\Controllers\WaiterController;
@@ -74,4 +76,15 @@ Route::middleware(['pos.auth:owner'])->prefix('owner')->group(function () {
     Route::get('/settings', [OwnerController::class, 'settings'])->name('owner.settings');
     Route::post('/settings', [OwnerController::class, 'saveSettings'])->name('owner.settings.save');
     Route::post('/backup', [OwnerController::class, 'downloadBackup'])->name('owner.backup');
+
+    // Hybrid 25% Cloud AI Analytics, Nightly Sync & Investor Share Portal
+    Route::get('/analytics', [AnalyticsController::class, 'index'])->name('owner.analytics');
+    Route::post('/analytics/generate-ai', [AnalyticsController::class, 'generateAi'])->name('owner.analytics.ai');
+    Route::post('/analytics/sync-now', [AnalyticsController::class, 'syncNow'])->name('owner.analytics.sync');
+    Route::post('/analytics/share-links', [AnalyticsController::class, 'createShareLink'])->name('owner.analytics.share.store');
+    Route::patch('/analytics/share-links/{shareLink}/toggle', [AnalyticsController::class, 'toggleShareLink'])->name('owner.analytics.share.toggle');
+    Route::delete('/analytics/share-links/{shareLink}', [AnalyticsController::class, 'destroyShareLink'])->name('owner.analytics.share.destroy');
 });
+
+// Public Tokenized Read-Only Investor Performance Portal (No Staff PIN Required)
+Route::get('/investor/{token}', [InvestorPortalController::class, 'show'])->name('investor.report');

@@ -10,6 +10,7 @@ use App\Models\MenuItem;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\StaffUser;
+use App\Services\AnalyticsService;
 use App\Services\PosService;
 use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
@@ -357,15 +358,44 @@ class OwnerController extends Controller
             'paper_width' => ['required', 'in:58,80'],
             'upi_id' => ['nullable', 'string', 'max:100'],
             'bill_footer' => ['nullable', 'string', 'max:200'],
+            'pos_mode' => ['nullable', 'in:outlet,cloud_hub'],
+            'outlet_code' => ['nullable', 'string', 'max:40'],
+            'outlet_city' => ['nullable', 'string', 'max:80'],
+            'outlet_state' => ['nullable', 'string', 'max:80'],
+            'cloud_sync_enabled' => ['nullable', 'in:0,1'],
+            'cloud_sync_url' => ['nullable', 'url', 'max:255'],
+            'cloud_sync_token' => ['nullable', 'string', 'max:180'],
+            'nightly_sync_time' => ['nullable', 'regex:/^\d{2}:\d{2}$/'],
+            'gemini_api_key' => ['nullable', 'string', 'max:200'],
+            'gemini_model' => ['nullable', 'string', 'max:60'],
+            'ai_auto_nightly' => ['nullable', 'in:0,1'],
         ]);
 
         $v['gst_enabled'] = $request->boolean('gst_enabled') ? '1' : '0';
+        if ($request->has('pos_mode')) {
+            $v['cloud_sync_enabled'] = $request->boolean('cloud_sync_enabled') ? '1' : '0';
+            $v['ai_auto_nightly'] = $request->boolean('ai_auto_nightly') ? '1' : '0';
+        }
+
+        // Preserve existing secrets if left blank during a general settings update
+        if (array_key_exists('cloud_sync_token', $v) && trim((string) $v['cloud_sync_token']) === '' && ! $request->boolean('clear_cloud_sync_token')) {
+            unset($v['cloud_sync_token']);
+        }
+        if (array_key_exists('gemini_api_key', $v) && trim((string) $v['gemini_api_key']) === '' && ! $request->boolean('clear_gemini_api_key')) {
+            unset($v['gemini_api_key']);
+        }
+
+        if (! empty($v['outlet_code'])) {
+            $v['outlet_code'] = strtoupper(trim((string) $v['outlet_code']));
+        }
 
         foreach ($v as $k => $val) {
             HotelSetting::setValue($k, (string) ($val ?? ''));
         }
 
-        return back()->with('status', 'Hotel & Thermal Printer settings saved!');
+        app(AnalyticsService::class)->ensureLocalOutlet();
+
+        return back()->with('status', 'Hotel, Thermal Printer & Hybrid Cloud AI settings saved!');
     }
 
     public function downloadBackup(Request $request): StreamedResponse

@@ -17,7 +17,7 @@
       </div>
       <div>
         <h1>{{ $settings['hotel_name'] ?? 'Royal Hotel POS' }}</h1>
-        <span>Local LAN Server • Offline-Ready POS</span>
+        <span>{{ ($settings['pos_mode'] ?? 'outlet') === 'cloud_hub' ? 'Cloud Analytics Hub • Multi-Outlet AI Portal' : 'Hybrid 75% Offline LAN • 25% Cloud AI Sync' }}</span>
       </div>
     </div>
 
@@ -33,6 +33,7 @@
       @endif
       @if ($currentStaff->role === 'owner')
         <a class="pos-nav-link {{ request()->routeIs('owner.dashboard') ? 'active' : '' }}" href="{{ route('owner.dashboard') }}">Owner Reports</a>
+        <a class="pos-nav-link {{ request()->routeIs('owner.analytics*') ? 'active' : '' }}" href="{{ route('owner.analytics') }}">AI Analytics</a>
         <a class="pos-nav-link {{ request()->routeIs('owner.menu') ? 'active' : '' }}" href="{{ route('owner.menu') }}">Menu</a>
         <a class="pos-nav-link {{ request()->routeIs('owner.tables') ? 'active' : '' }}" href="{{ route('owner.tables') }}">Tables</a>
         <a class="pos-nav-link {{ request()->routeIs('owner.staff') ? 'active' : '' }}" href="{{ route('owner.staff') }}">Staff</a>

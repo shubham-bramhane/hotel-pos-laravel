@@ -14,6 +14,7 @@
     @foreach (['today' => 'Today', 'yesterday' => 'Yesterday', '7days' => '7 Days', 'month' => 'This Month'] as $key => $lbl)
       <a href="{{ route('owner.dashboard', ['range' => $key]) }}" class="btn btn-sm {{ $range === $key ? 'btn-brand' : 'btn-outline' }}">{{ $lbl }}</a>
     @endforeach
+    <a href="{{ route('owner.analytics') }}" class="btn btn-sm btn-blue">AI Charts &amp; Investor Portal →</a>
     <a href="{{ route('owner.export.sales', request()->query()) }}" class="btn btn-sm btn-emerald">Export Sales CSV</a>
   </div>
 </div>

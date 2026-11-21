@@ -7,7 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 class HotelSetting extends Model
 {
     protected $primaryKey = 'key';
+
     public $incrementing = false;
+
     protected $keyType = 'string';
 
     protected $fillable = ['key', 'value'];
@@ -36,6 +38,17 @@ class HotelSetting extends Model
             'paper_width' => '80',
             'upi_id' => '',
             'bill_footer' => 'Thank you! Please Visit Again.',
+            'pos_mode' => (string) config('pos.mode', 'outlet'),
+            'outlet_code' => (string) config('pos.outlet_code', 'ROYAL-YTL-01'),
+            'outlet_city' => 'Yavatmal',
+            'outlet_state' => 'Maharashtra',
+            'cloud_sync_enabled' => config('pos.cloud_sync.enabled') ? '1' : '0',
+            'cloud_sync_url' => (string) config('pos.cloud_sync.url', ''),
+            'cloud_sync_token' => (string) config('pos.cloud_sync.token', ''),
+            'nightly_sync_time' => (string) config('pos.cloud_sync.nightly_time', '01:00'),
+            'gemini_api_key' => (string) config('pos.gemini.api_key', ''),
+            'gemini_model' => (string) config('pos.gemini.model', 'gemini-4-hydrogen'),
+            'ai_auto_nightly' => '1',
         ], static::query()->pluck('value', 'key')->toArray());
     }
 }

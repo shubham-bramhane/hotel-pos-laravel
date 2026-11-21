@@ -1,87 +1,73 @@
-# Testing Strategy — Royal Hotel & Restaurant LAN POS
+# Testing Strategy — Royal Hotel & Restaurant Hybrid POS
 
 ## 1. Testing Philosophy
 
-Because this POS handles live cash, UPI, tax calculations, kitchen routing, and anti-theft auditing in an offline environment, testing focuses on **zero financial miscalculation**, **strict role isolation**, **transactional state consistency**, and **real-world LAN usability** across phones, tablets, and thermal printers.
+This system spans two operational boundaries: a **75% offline mission-critical billing floor** (where zero math error, zero downtime, and strict RBAC are mandatory) and a **25% cloud AI & investor reporting layer** (where nightly sync idempotency, HMAC signature verification, Gemini API resilience, and investor link privacy are paramount).
 
 ---
 
-## 2. Test Environment & Tooling
+## 2. Test Environment & Commands
 
-Configured in `phpunit.xml` and `composer.json`:
+Configured in `phpunit.xml` (in-memory SQLite `:memory:` with `RefreshDatabase` + `DatabaseSeeder`, zero external network calls thanks to `Http::fake()`):
 
-- **Framework**: PHPUnit `^12.5.12` via `php artisan test` (or `composer test`).
-- **Database**: In-memory SQLite (`DB_CONNECTION=sqlite`, `DB_DATABASE=:memory:`) with `RefreshDatabase` + `DatabaseSeeder` for fast, isolated, repeatable runs.
-- **Drivers**: `CACHE_STORE=array`, `SESSION_DRIVER=array`, `QUEUE_CONNECTION=sync`, `MAIL_MAILER=array`.
-- **Linting / Formatting**: Laravel Pint (`vendor/bin/pint --test`).
-
-### Quick Commands
 ```bash
-# Run full automated test suite
-composer test
-# or
-php artisan test
+# Run full automated suite
+php artisan test --compact
 
-# Run specific POS end-to-end flow test
-php artisan test --filter=HotelPosFlowTest
+# Run targeted test suites
+php artisan test --compact tests/Feature/HotelPosFlowTest.php
+php artisan test --compact tests/Feature/HybridAnalyticsAndSyncTest.php
 
-# Check code formatting
-vendor/bin/pint --test
+# Format PHP files per Laravel Pint standard
+vendor/bin/pint --dirty --format agent
 ```
 
 ---
 
-## 3. Test Pyramid & Coverage Plan
+## 3. Automated Test Coverage (`tests/Feature/`)
 
-### 3.1 Feature / Integration Tests (`tests/Feature/`)
-Tests HTTP routes, middleware, validation, database state, JSON APIs, Blade views, and streamed downloads end-to-end.
+### 3.1 Core Offline POS Lifecycle (`HotelPosFlowTest.php`)
+- Unauthenticated redirect & PIN login (`4444`, `3333`, `2222`, `1111`).
+- RBAC isolation (Waiter blocked from `/owner` and `/counter`).
+- Table opening, multi-item KOT submission, CGST/SGST math (`660 → 693`), bill request.
+- Kitchen KDS `/api/kitchen/live` JSON counts and `pending → preparing → ready` transitions.
+- Cashier table transfer (`T1 → T2`), item cancellation with reason, flat discount recalculation (`480 - 80 + 5% GST = 420`), Split Cash+UPI settlement, and table release.
+- Thermal Bill & KOT print rendering, Owner KPIs, CSV sales export, JSON backup download, and `audit_logs` assertions.
 
-**Currently Implemented (`tests/Feature/HotelPosFlowTest.php`)**:
-- Unauthenticated redirect to `/login`.
-- Waiter PIN login (`4444`) and RBAC denial on `/owner` and `/counter`.
-- Table opening (`T1`), multi-item KOT submission via `cart_json`, subtotal & 5% GST calculation (`660 → 693`), and table status transition (`occupied`).
-- Waiter bill request (`billing` state).
-- Kitchen PIN login (`3333`), `/api/kitchen/live` JSON counts, and KOT status transitions (`pending → preparing → ready`).
-- Cashier PIN login (`2222`), table transfer (`T1 → T2`), item cancellation with reason, flat discount (`₹80`) + GST recalculation (`480 - 80 = 400 → +5% = 420`), and Split payment settlement (`Cash ₹200 + UPI ₹220`), releasing `T2`.
-- Thermal receipt rendering for Bill (`/print/bill/{order}`) and KOT (`/print/kot/{kot}`).
-- Owner PIN login (`1111`), KPI dashboard verification (`₹420`), Menu/Tables/Staff/Audit/Settings views, CSV sales export, JSON database backup download, and `audit_logs` presence.
+### 3.2 Hybrid 75/25 AI Analytics, Cloud Sync & Investor Portal (`HybridAnalyticsAndSyncTest.php`)
+- **Offline Snapshots & RBAC**: Verifies `/owner/analytics` blocks non-owners, builds `daily_analytics_snapshots` for dine-in + parcel orders, computes accurate revenue/payment/category rollups, and renders SVG chart containers.
+- **Gemini AI + Offline Fallback**:
+  - Verifies automatic `local_fallback` statistical report generation when no Gemini API key is set.
+  - Mocks `POST https://generativelanguage.googleapis.com/v1/interactions` via `Http::fake()` and asserts `x-goog-api-key` header, `gemini-4-hydrogen` model, structured JSON extraction (`provider = gemini`, `health_score = 89`).
+  - Simulates HTTP `503` Gemini outage and verifies seamless fallback to `local_fallback` without crashes.
+- **Nightly Outbound Sync & Inbound Multi-Outlet Cloud Hub**:
+  - Simulates offline failure (`503`) on `php artisan pos:sync-cloud` and verifies snapshot is marked `failed` with `sync_attempts = 1` for auto-retry.
+  - Verifies retry success (`200`) sends Bearer token, `X-POS-Outlet-Code`, and `X-POS-Signature` HMAC headers, marking snapshot `synced` and logging `CloudSyncLog`.
+  - Verifies `POST /api/cloud/sync` rejects invalid Bearer tokens (`401`), ingests signed payloads from a second remote hotel (`ROYAL-PUN-02`, Pune), updates `/api/cloud/health` (`outlets_connected = 2`), and aggregates both branches on `/owner/analytics`.
+- **Investor Share Portal & Privacy**:
+  - Verifies Owner link creation, unauthenticated investor access to `/investor/{token}`, view counter increment, AI narrative rendering, **zero customer phone PII leakage**, and immediate `404` lockout upon revocation.
 
-**Recommended Feature Test Additions**:
-1. **Negative RBAC Matrix**: Verify Kitchen (`3333`) cannot access `/counter` or `/owner`; Cashier (`2222`) cannot access `/owner`; deactivated staff (`is_active = false`) are blocked with `401` on `/api/*` and redirected on web routes.
-2. **Takeaway / Parcel Lifecycle**: Create parcel order, add items, settle via Cash/UPI/Card, verify no table is locked.
-3. **Edge-Case State Guards**:
-   - Reject adding items or cancelling items on `paid` or `cancelled` orders.
-   - Reject cancelling an already `paid` bill.
-   - Reject transferring a dine-in order to an already occupied table or transferring a takeaway order.
-   - Reject deleting a dining table that has an active order.
-   - Auto-cancel KOT when its last active item is cancelled.
-4. **Menu & Staff Validation**: Duplicate PIN rejection, invalid role rejection, duplicate table code rejection, GST disabled (`gst_enabled = 0`) billing behavior.
-5. **Date-Range Reporting**: Verify `yesterday`, `7days`, `month`, and `custom` filters on `/owner` and `/owner/export-sales`.
-
-### 3.2 Unit Tests (`tests/Unit/`)
-Target pure business logic in `App\Services\PosService`:
-- `PosService::formatINR()` across small numbers (`₹0`, `₹45`), thousands (`₹1,250`), lakhs (`₹1,25,000`), decimals (`₹99.50`), and negative amounts (`-₹250`).
-- `recalculateOrder()` rounding edge cases (flat discount exceeding subtotal capped at subtotal, 100%+ percent discount capped at 100%, 0% GST, 5%/12%/18% CGST+SGST split, positive and negative `round_off` values).
-- Split payment fallback calculation when `upi_amount` is omitted.
-
-### 3.3 Manual LAN & Hardware QA Checklist
-Run before deploying to a live restaurant floor:
-
-| Area | Verification Steps |
-|---|---|
-| **Multi-Device LAN Sync** | Open Waiter on mobile phone (`http://<LAN-IP>:6808`), Kitchen on tablet, Counter on laptop; send KOT from phone and confirm Kitchen updates within ≤ 3s with chime sound. |
-| **Offline Mode** | Disconnect router WAN/internet cable while keeping Wi-Fi active; complete full order → KDS → settle → print cycle with zero console/network errors. |
-| **Thermal Printing** | Print both `/print/kot/{kot}` and `/print/bill/{order}` on actual 80mm and 58mm thermal printers; verify alignment, currency symbol (`₹`), GST breakdown, and margins (`@media print`). |
-| **Desktop Launcher** | Double-click `Open-Hotel-POS-App.vbs` and confirm standalone Chrome/Edge app window launches without address bar clutter. |
-| **Port Coexistence** | Run `Activate-Hotel-POS-6808.bat` and confirm `/up` returns HTTP 200 on both port `6808` (Hotel POS) and port `6707` (Driving School Portal). |
-| **Backup & Export** | Open exported CSV in Microsoft Excel and verify `₹`/UTF-8 characters render cleanly; inspect downloaded JSON backup for valid JSON and complete table keys. |
+### 3.3 Recommended Next Unit & Edge Tests
+- Unit tests for `PosService::formatINR()` (lakhs, crores, decimals, negative numbers) and `recalculateOrder()` rounding extremes.
+- Negative validation tests for expired investor tokens (`expires_at < now()`), tampered HMAC signatures on `/api/cloud/sync`, and deleting occupied tables.
 
 ---
 
-## 4. Release Quality Gate
+## 4. Manual LAN, Cloud & Hardware QA Checklist
 
-Before committing or deploying any production change:
-1. Run `php artisan test` — **100% of tests must pass**.
-2. Verify `GET /up` responds `200 OK` on the target Apache port (`6808`).
-3. Verify no sensitive files (`.env`, `*.sqlite`, backups) are tracked in Git.
-4. For schema changes, test both `php artisan migrate:fresh --seed` and incremental `php artisan migrate` against MySQL.
+| Area | Verification Steps |
+|---|---|
+| **Offline Floor Resilience** | Disconnect internet WAN cable while keeping Wi-Fi active; complete Waiter → KDS → Counter → Thermal Bill cycle and open `/owner/analytics` to confirm offline SVG charts and statistical AI insights still render with zero console errors. |
+| **Nightly Cloud Sync** | Configure a Cloud Hub URL + shared token in Owner → Settings, click **Sync Nightly Snapshots Now** (or run `php artisan pos:sync-cloud --days=7 --ai --manual`), and confirm sister branch appears on Cloud Hub `/owner/analytics`. |
+| **Windows Scheduler** | Run `Setup-Nightly-Cloud-Sync.bat` as Admin and verify task `RoyalHotelPOS_NightlyCloudSync` exists in Windows Task Scheduler (`schtasks /Query /TN RoyalHotelPOS_NightlyCloudSync`). |
+| **Investor PDF Export** | Open a generated `/investor/{token}` link in an incognito browser, click **Print / Save Investor PDF**, and verify clean charts, tables, and zero staff/PII leakage. |
+| **Thermal Printing & Coexistence** | Verify 80mm/58mm print formatting and confirm `GET /up` returns `200 OK` on both port `6808` and port `6707`. |
+
+---
+
+## 5. Release Quality Gate
+
+1. `vendor/bin/pint --dirty --format agent` passes with zero formatting violations.
+2. `php artisan test --compact` passes 100% (currently **7 tests, 139 assertions**).
+3. `php artisan migrate --force` succeeds cleanly on local MySQL (`hotel_pos`).
+4. `GET /up` and `GET /api/cloud/health` both return HTTP `200`.
