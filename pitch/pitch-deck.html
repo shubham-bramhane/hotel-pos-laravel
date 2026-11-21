@@ -1,0 +1,997 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Royal Hotel LAN POS — Pitch Deck & Business Plan</title>
+  <style>
+    @page {
+      size: 13.333in 7.5in;
+      margin: 0;
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      font-family: "Segoe UI", system-ui, -apple-system, Roboto, Arial, sans-serif;
+      background: #e2e8f0;
+      color: #0f172a;
+    }
+
+    .slide {
+      width: 13.333in;
+      height: 7.5in;
+      background: #ffffff;
+      position: relative;
+      overflow: hidden;
+      page-break-after: always;
+      break-after: page;
+      display: flex;
+      flex-direction: column;
+      padding: 0.52in 0.65in 0.45in;
+    }
+
+    .slide:last-child {
+      page-break-after: auto;
+      break-after: auto;
+    }
+
+    /* Cover Slide */
+    .slide-cover {
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 52%, #7c2d12 100%);
+      color: #ffffff;
+      justify-content: space-between;
+      padding: 0.72in 0.85in;
+    }
+
+    .cover-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      border-radius: 999px;
+      background: rgba(234, 88, 12, 0.25);
+      border: 1px solid rgba(251, 146, 60, 0.55);
+      color: #fdba74;
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      width: fit-content;
+    }
+
+    .cover-title {
+      font-size: 56px;
+      font-weight: 900;
+      line-height: 1.08;
+      letter-spacing: -0.03em;
+      margin: 18px 0 16px;
+      max-width: 9.8in;
+    }
+
+    .cover-title span { color: #fb923c; }
+
+    .cover-sub {
+      font-size: 21px;
+      color: #cbd5e1;
+      max-width: 8.6in;
+      line-height: 1.45;
+      margin: 0;
+    }
+
+    .cover-badges {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-top: 28px;
+    }
+
+    .cover-stat {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      border-radius: 14px;
+      padding: 16px 18px;
+    }
+
+    .cover-stat strong {
+      display: block;
+      font-size: 22px;
+      font-weight: 900;
+      color: #fb923c;
+      margin-bottom: 4px;
+    }
+
+    .cover-stat span {
+      font-size: 13px;
+      color: #e2e8f0;
+      font-weight: 600;
+    }
+
+    .cover-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 1px solid rgba(255, 255, 255, 0.14);
+      padding-top: 16px;
+      font-size: 13px;
+      color: #94a3b8;
+    }
+
+    /* Standard Slide Header & Footer */
+    .s-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      border-bottom: 2px solid #e2e8f0;
+      padding-bottom: 12px;
+      margin-bottom: 20px;
+    }
+
+    .s-kicker {
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: #ea580c;
+      margin-bottom: 4px;
+    }
+
+    .s-title {
+      margin: 0;
+      font-size: 30px;
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      color: #0f172a;
+    }
+
+    .s-tag {
+      font-size: 12px;
+      font-weight: 700;
+      color: #64748b;
+      background: #f1f5f9;
+      padding: 6px 12px;
+      border-radius: 8px;
+    }
+
+    .s-body {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .s-foot {
+      margin-top: auto;
+      padding-top: 10px;
+      border-top: 1px solid #e2e8f0;
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+      color: #64748b;
+      font-weight: 600;
+    }
+
+    /* Reusable Components */
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+    .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+
+    .card {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 14px;
+      padding: 18px 20px;
+    }
+
+    .card-dark {
+      background: #0f172a;
+      color: #f8fafc;
+      border-radius: 14px;
+      padding: 18px 20px;
+    }
+
+    .card-accent {
+      background: #fff7ed;
+      border: 2px solid #ea580c;
+      border-radius: 14px;
+      padding: 18px 20px;
+    }
+
+    .tbl {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+
+    .tbl th {
+      background: #0f172a;
+      color: #ffffff;
+      text-align: left;
+      padding: 11px 14px;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .tbl td {
+      padding: 11px 14px;
+      border-bottom: 1px solid #e2e8f0;
+      vertical-align: middle;
+    }
+
+    .tbl tr:nth-child(even) td { background: #f8fafc; }
+
+    .win { color: #059669; font-weight: 800; }
+    .bad { color: #b91c1c; font-weight: 600; }
+    .mono { font-family: Consolas, Menlo, monospace; }
+
+    .pill {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 800;
+    }
+    .pill-orange { background: #ffedd5; color: #c2410c; }
+    .pill-green { background: #dcfce7; color: #15803d; }
+    .pill-blue { background: #dbeafe; color: #1d4ed8; }
+    .pill-purple { background: #ede9fe; color: #6d28d9; }
+
+    .price-big {
+      font-size: 34px;
+      font-weight: 900;
+      color: #0f172a;
+      margin: 8px 0 2px;
+    }
+
+    .price-amc {
+      font-size: 13px;
+      font-weight: 700;
+      color: #ea580c;
+      margin-bottom: 12px;
+    }
+
+    ul.clean {
+      margin: 0;
+      padding-left: 18px;
+      font-size: 13.5px;
+      line-height: 1.6;
+      color: #334155;
+    }
+
+    ul.clean li { margin-bottom: 5px; }
+
+    .quote-box {
+      background: linear-gradient(135deg, #0f172a, #1e293b);
+      color: #f8fafc;
+      border-left: 6px solid #ea580c;
+      border-radius: 12px;
+      padding: 16px 20px;
+      font-size: 14.5px;
+      line-height: 1.55;
+      margin-bottom: 16px;
+    }
+
+    .step-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      background: #ea580c;
+      color: #fff;
+      font-weight: 900;
+      font-size: 14px;
+      margin-bottom: 8px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ==================== SLIDE 1: COVER ==================== -->
+  <section class="slide slide-cover">
+    <div>
+      <div class="cover-pill">Self-Hosted Local LAN Hotel &amp; Restaurant POS</div>
+      <h1 class="cover-title">Own Your Hotel POS.<br /><span>Zero Internet. Zero Yearly Cloud Fees.</span></h1>
+      <p class="cover-sub">
+        One counter laptop runs the full server on your local Wi-Fi router — waiters take orders on their phones, kitchen gets instant live KOT alerts, and owners get complete anti-theft billing control.
+      </p>
+
+      <div class="cover-badges">
+        <div class="cover-stat">
+          <strong>100% Offline LAN</strong>
+          <span>Works even if fiber/internet fails during rush hour</span>
+        </div>
+        <div class="cover-stat">
+          <strong>Unlimited Phones</strong>
+          <span>Waiters use existing Android/iOS browsers — ₹0 extra license</span>
+        </div>
+        <div class="cover-stat">
+          <strong>Live Kitchen KDS</strong>
+          <span>Instant KOT screen + chime alert + 80mm thermal print</span>
+        </div>
+        <div class="cover-stat">
+          <strong>Anti-Theft Audit</strong>
+          <span>Every cancel, discount &amp; transfer logged with staff name</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="cover-footer">
+      <div><strong>Royal Hotel LAN POS</strong> • Built on Laravel 13 + Apache 2.4 + Local MySQL</div>
+      <div>Business Pitch Deck &amp; Architecture Plan • 2026</div>
+    </div>
+  </section>
+
+  <!-- ==================== SLIDE 2: PROBLEM VS SOLUTION ==================== -->
+  <section class="slide">
+    <div class="s-head">
+      <div>
+        <div class="s-kicker">Market Opportunity</div>
+        <h2 class="s-title">Why Local Hotels Switch From Cloud POS &amp; Paper Parchis</h2>
+      </div>
+      <span class="s-tag">Competitive Advantage</span>
+    </div>
+
+    <div class="s-body">
+      <table class="tbl">
+        <thead>
+          <tr>
+            <th style="width:24%">Hotel Owner Pain Point</th>
+            <th style="width:36%">Typical Cloud POS (Petpooja / Posist)</th>
+            <th style="width:40%">Our Self-Hosted LAN POS</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Annual Software Cost</strong></td>
+            <td class="bad">₹12,000 – ₹22,000/yr + Captain App &amp; KDS add-ons</td>
+            <td class="win">₹8,999 One-Time Setup + ₹3,500/yr Local AMC</td>
+          </tr>
+          <tr>
+            <td><strong>Internet Outage at Rush Hour</strong></td>
+            <td class="bad">Waiter app freezes &amp; cloud sync hangs</td>
+            <td class="win">100% Local Wi-Fi LAN — Zero Internet Needed</td>
+          </tr>
+          <tr>
+            <td><strong>Waiter Handheld Hardware</strong></td>
+            <td class="bad">Per-device license fee or expensive tablets</td>
+            <td class="win">Works on Waiters' Existing Phones (Zero App Store Install)</td>
+          </tr>
+          <tr>
+            <td><strong>Kitchen Order Display (KDS)</strong></td>
+            <td class="bad">Paid add-on (₹3,000 – ₹6,000/yr extra)</td>
+            <td class="win">Included Free — Dark TV/Tablet Screen + Audio Chime</td>
+          </tr>
+          <tr>
+            <td><strong>Staff Theft &amp; Bill Leakage</strong></td>
+            <td class="bad">Hard to spot silent cancels during busy hours</td>
+            <td class="win">Dedicated Anti-Theft Audit Log (Item Cancel, Discount, Transfer)</td>
+          </tr>
+          <tr>
+            <td><strong>Data Privacy &amp; Ownership</strong></td>
+            <td class="bad">Sales data locked on third-party cloud</td>
+            <td class="win">100% on Hotel's Own PC + 1-Click Daily Backup</td>
+          </tr>
+          <tr>
+            <td><strong>Technical Support</strong></td>
+            <td class="bad">Slow call-center tickets on Sunday nights</td>
+            <td class="win">Direct Local Support — Fast On-Site / Phone Resolution</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="s-foot">
+      <span>Royal Hotel LAN POS — Pitch Deck</span>
+      <span>Slide 2 / 10</span>
+    </div>
+  </section>
+
+  <!-- ==================== SLIDE 3: SYSTEM ARCHITECTURE FLOWCHART (SVG) ==================== -->
+  <section class="slide">
+    <div class="s-head">
+      <div>
+        <div class="s-kicker">Technical Architecture</div>
+        <h2 class="s-title">Local Wi-Fi Hotel Server Flowchart (Zero Cloud Required)</h2>
+      </div>
+      <span class="s-tag">1 – 5 ms LAN Speed</span>
+    </div>
+
+    <div class="s-body" style="align-items:center">
+      <svg viewBox="0 0 1180 480" width="100%" height="465" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <path d="M 0 1 L 10 5 L 0 9 z" fill="#475569"/>
+          </marker>
+          <marker id="arrOrg" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <path d="M 0 1 L 10 5 L 0 9 z" fill="#ea580c"/>
+          </marker>
+          <marker id="arrGrn" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <path d="M 0 1 L 10 5 L 0 9 z" fill="#059669"/>
+          </marker>
+        </defs>
+
+        <!-- LEFT COLUMN: WAITERS -->
+        <rect x="18" y="32" width="250" height="190" rx="16" fill="#fff7ed" stroke="#fb923c" stroke-width="2"/>
+        <text x="143" y="60" text-anchor="middle" font-size="13" font-weight="800" fill="#c2410c">WAITERS (MOBILE PHONES)</text>
+        <rect x="38" y="76" width="210" height="58" rx="10" fill="#ffffff" stroke="#fdba74" stroke-width="1.5"/>
+        <text x="143" y="101" text-anchor="middle" font-size="14" font-weight="800" fill="#0f172a">Waiter 1 Phone (PIN 4444)</text>
+        <text x="143" y="121" text-anchor="middle" font-size="11.5" fill="#64748b">Table Map • Short Codes • KOT</text>
+        <rect x="38" y="148" width="210" height="58" rx="10" fill="#ffffff" stroke="#fdba74" stroke-width="1.5"/>
+        <text x="143" y="173" text-anchor="middle" font-size="14" font-weight="800" fill="#0f172a">Waiter 2 Phone (PIN 5555)</text>
+        <text x="143" y="193" text-anchor="middle" font-size="11.5" fill="#64748b">Live READY Alerts • Request Bill</text>
+
+        <!-- LEFT BOTTOM: OWNER -->
+        <rect x="18" y="265" width="250" height="175" rx="16" fill="#f5f3ff" stroke="#a78bfa" stroke-width="2"/>
+        <text x="143" y="294" text-anchor="middle" font-size="13" font-weight="800" fill="#6d28d9">HOTEL OWNER (PIN 1111)</text>
+        <rect x="38" y="310" width="210" height="112" rx="10" fill="#ffffff" stroke="#c4b5fd" stroke-width="1.5"/>
+        <text x="143" y="336" text-anchor="middle" font-size="14" font-weight="800" fill="#0f172a">Owner Control Panel</text>
+        <text x="143" y="358" text-anchor="middle" font-size="11.5" fill="#475569">• Live Cash / UPI Sales Reports</text>
+        <text x="143" y="378" text-anchor="middle" font-size="11.5" fill="#475569">• Anti-Theft Cancel/Discount Log</text>
+        <text x="143" y="398" text-anchor="middle" font-size="11.5" fill="#475569">• Menu, Staff PINs &amp; 1-Click Backup</text>
+
+        <!-- CENTER TOP: WIFI ROUTER -->
+        <rect x="348" y="28" width="465" height="90" rx="16" fill="#eff6ff" stroke="#2563eb" stroke-width="2.5"/>
+        <text x="580" y="61" text-anchor="middle" font-size="17" font-weight="900" fill="#1e3a8a">HOTEL WI-FI ROUTER (Local LAN Only)</text>
+        <text x="580" y="84" text-anchor="middle" font-size="12.5" font-weight="700" fill="#2563eb">Static Local IP: http://192.168.1.8:6808 • Works 100% Without Internet</text>
+        <text x="580" y="103" text-anchor="middle" font-size="11" fill="#475569">Connects Waiter Phones, Kitchen Screen &amp; Billing PC in 1–5 milliseconds</text>
+
+        <!-- CENTER MAIN: BILLING COUNTER SERVER PC -->
+        <rect x="348" y="162" width="465" height="290" rx="18" fill="#0f172a" stroke="#ea580c" stroke-width="3"/>
+        <text x="580" y="194" text-anchor="middle" font-size="15" font-weight="900" fill="#fb923c">MAIN COUNTER LAPTOP / PC (LOCAL SERVER)</text>
+
+        <rect x="372" y="212" width="205" height="98" rx="12" fill="#1e293b" stroke="#475569"/>
+        <text x="474" y="240" text-anchor="middle" font-size="14" font-weight="800" fill="#ffffff">Apache 2.4 Service</text>
+        <text x="474" y="261" text-anchor="middle" font-size="12" fill="#94a3b8">Laravel 13 POS App</text>
+        <text x="474" y="281" text-anchor="middle" font-size="11.5" fill="#34d399">Auto-Start • Multi-User • :6808</text>
+
+        <rect x="593" y="212" width="196" height="98" rx="12" fill="#1e293b" stroke="#475569"/>
+        <text x="691" y="240" text-anchor="middle" font-size="14" font-weight="800" fill="#ffffff">Local MySQL DB</text>
+        <text x="691" y="261" text-anchor="middle" font-size="12" fill="#94a3b8">Database: hotel_pos</text>
+        <text x="691" y="281" text-anchor="middle" font-size="11.5" fill="#fbbf24">Daily Local / Drive Backup</text>
+
+        <rect x="372" y="328" width="417" height="102" rx="12" fill="#1e293b" stroke="#ea580c" stroke-width="1.5"/>
+        <text x="580" y="356" text-anchor="middle" font-size="15" font-weight="800" fill="#ffffff">Cashier Billing Desk (PIN 2222)</text>
+        <text x="580" y="379" text-anchor="middle" font-size="12" fill="#cbd5e1">Live Table Status • Parcel Orders • Table Transfer • Discounts</text>
+        <text x="580" y="401" text-anchor="middle" font-size="12" fill="#34d399">Auto CGST+SGST • Cash / UPI / Split Settlement • 80mm Bill Print</text>
+
+        <!-- RIGHT TOP: KITCHEN KDS -->
+        <rect x="892" y="32" width="270" height="190" rx="16" fill="#0f172a" stroke="#10b981" stroke-width="2.5"/>
+        <text x="1027" y="60" text-anchor="middle" font-size="13" font-weight="800" fill="#34d399">KITCHEN COUNTER (PIN 3333)</text>
+        <rect x="912" y="76" width="230" height="68" rx="10" fill="#1e293b" stroke="#34d399" stroke-width="1.5"/>
+        <text x="1027" y="102" text-anchor="middle" font-size="14" font-weight="800" fill="#ffffff">Live KDS Screen (TV / Tab)</text>
+        <text x="1027" y="122" text-anchor="middle" font-size="11.5" fill="#fde047">3s Auto-Poll • Beep Chime • Cooking/Ready</text>
+        <rect x="912" y="156" width="230" height="50" rx="10" fill="#1e293b" stroke="#475569"/>
+        <text x="1027" y="186" text-anchor="middle" font-size="12.5" font-weight="700" fill="#e2e8f0">86 Stock-Out Toggle + KOT Print</text>
+
+        <!-- RIGHT BOTTOM: PRINTERS -->
+        <rect x="892" y="265" width="270" height="175" rx="16" fill="#ecfdf5" stroke="#059669" stroke-width="2"/>
+        <text x="1027" y="294" text-anchor="middle" font-size="13" font-weight="800" fill="#047857">THERMAL RECEIPT PRINTERS</text>
+        <rect x="912" y="310" width="230" height="50" rx="10" fill="#ffffff" stroke="#6ee7b7" stroke-width="1.5"/>
+        <text x="1027" y="340" text-anchor="middle" font-size="13" font-weight="800" fill="#0f172a">Counter 80mm / 58mm Bill Printer</text>
+        <rect x="912" y="372" width="230" height="50" rx="10" fill="#ffffff" stroke="#6ee7b7" stroke-width="1.5"/>
+        <text x="1027" y="402" text-anchor="middle" font-size="13" font-weight="800" fill="#0f172a">Kitchen 80mm KOT Printer (Opt)</text>
+
+        <!-- ARROWS -->
+        <line x1="268" y1="95" x2="344" y2="75" stroke="#ea580c" stroke-width="3" marker-end="url(#arrOrg)" marker-start="url(#arrOrg)"/>
+        <line x1="268" y1="340" x2="344" y2="300" stroke="#475569" stroke-width="2.5" marker-end="url(#arr)" marker-start="url(#arr)"/>
+        <line x1="580" y1="118" x2="580" y2="158" stroke="#2563eb" stroke-width="3" marker-end="url(#arr)" marker-start="url(#arr)"/>
+        <line x1="813" y1="75" x2="888" y2="95" stroke="#059669" stroke-width="3" marker-end="url(#arrGrn)" marker-start="url(#arrGrn)"/>
+        <line x1="813" y1="365" x2="888" y2="355" stroke="#059669" stroke-width="3" marker-end="url(#arrGrn)"/>
+      </svg>
+    </div>
+
+    <div class="s-foot">
+      <span>Royal Hotel LAN POS — Pitch Deck</span>
+      <span>Slide 3 / 10</span>
+    </div>
+  </section>
+
+  <!-- ==================== SLIDE 4: LIVE ORDER FLOW ==================== -->
+  <section class="slide">
+    <div class="s-head">
+      <div>
+        <div class="s-kicker">End-to-End Workflow</div>
+        <h2 class="s-title">From Guest Order to Printed GST Bill in 6 Zero-Paper Steps</h2>
+      </div>
+      <span class="s-tag">Real Restaurant Flow</span>
+    </div>
+
+    <div class="s-body">
+      <div class="grid-3" style="margin-bottom:20px">
+        <div class="card">
+          <div class="step-badge">1</div>
+          <h3 style="margin:0 0 6px;font-size:17px">Waiter Opens Table</h3>
+          <p style="margin:0;font-size:13.5px;color:#475569;line-height:1.5">
+            Waiter logs in with 4-digit PIN (<span class="mono">4444</span>) on their phone, taps empty green table <strong>T4</strong>, and selects guests.
+          </p>
+        </div>
+
+        <div class="card">
+          <div class="step-badge">2</div>
+          <h3 style="margin:0 0 6px;font-size:17px">Fast Order &amp; Send KOT</h3>
+          <p style="margin:0;font-size:13.5px;color:#475569;line-height:1.5">
+            Types short code (<span class="mono">PBM</span>, <span class="mono">BN</span>), adds note (<em>"Less spicy"</em>), and taps <strong>Send KOT</strong>. Table T4 turns Running Amber.
+          </p>
+        </div>
+
+        <div class="card">
+          <div class="step-badge">3</div>
+          <h3 style="margin:0 0 6px;font-size:17px">Kitchen Chime &amp; Cook</h3>
+          <p style="margin:0;font-size:13.5px;color:#475569;line-height:1.5">
+            Within 3 seconds, <strong>KOT-001</strong> pops up on Kitchen Screen (<span class="mono">3333</span>) with audio beep. Chef taps <strong>Cooking → Ready</strong>.
+          </p>
+        </div>
+      </div>
+
+      <div class="grid-3">
+        <div class="card">
+          <div class="step-badge" style="background:#059669">4</div>
+          <h3 style="margin:0 0 6px;font-size:17px">Food Ready &amp; Served</h3>
+          <p style="margin:0;font-size:13.5px;color:#475569;line-height:1.5">
+            Waiter sees pulsing green <strong>READY</strong> badge, picks up hot food, serves table, and can send repeat rounds (KOT #2, #3) anytime.
+          </p>
+        </div>
+
+        <div class="card">
+          <div class="step-badge" style="background:#2563eb">5</div>
+          <h3 style="margin:0 0 6px;font-size:17px">Bill Request &amp; Settlement</h3>
+          <p style="margin:0;font-size:13.5px;color:#475569;line-height:1.5">
+            Waiter taps <strong>Request Bill</strong>. Cashier (<span class="mono">2222</span>) sees Blue alert, checks CGST/SGST, settles <strong>Cash / UPI / Split</strong>, prints 80mm receipt.
+          </p>
+        </div>
+
+        <div class="card-accent">
+          <div class="step-badge" style="background:#7c3aed">6</div>
+          <h3 style="margin:0 0 6px;font-size:17px">Owner Live Sales &amp; Audit</h3>
+          <p style="margin:0;font-size:13.5px;color:#475569;line-height:1.5">
+            Table frees automatically. Owner (<span class="mono">1111</span>) sees real-time Cash/UPI totals, top dishes, and every cancel/discount logged with staff name!
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="s-foot">
+      <span>Royal Hotel LAN POS — Pitch Deck</span>
+      <span>Slide 4 / 10</span>
+    </div>
+  </section>
+
+  <!-- ==================== SLIDE 5: 4 ROLE INTERFACES ==================== -->
+  <section class="slide">
+    <div class="s-head">
+      <div>
+        <div class="s-kicker">Built-In Role Security</div>
+        <h2 class="s-title">Four Specialized Screens — One Unified System</h2>
+      </div>
+      <span class="s-tag">Role-Based PIN Access</span>
+    </div>
+
+    <div class="s-body">
+      <div class="grid-4">
+        <div class="card" style="border-top:5px solid #ea580c">
+          <span class="pill pill-orange">PIN 4444 / 5555</span>
+          <h3 style="margin:10px 0 8px;font-size:18px">Waiter Mobile</h3>
+          <ul class="clean">
+            <li>Section-wise Table Map (Hall, AC, Garden)</li>
+            <li>Veg / Non-Veg color icons &amp; short codes</li>
+            <li>Dish cooking notes per item</li>
+            <li>Multiple KOT rounds per table</li>
+            <li><strong>Locked:</strong> Cannot delete bills or give discounts</li>
+          </ul>
+        </div>
+
+        <div class="card-dark" style="border-top:5px solid #10b981">
+          <span class="pill pill-green">PIN 3333</span>
+          <h3 style="margin:10px 0 8px;font-size:18px;color:#fff">Kitchen KDS</h3>
+          <ul class="clean" style="color:#cbd5e1">
+            <li>High-contrast dark TV/Tablet view</li>
+            <li>Auto-polls every 3s over local Wi-Fi</li>
+            <li>Built-in audio chime on new KOT</li>
+            <li>Timer color warning (&gt;10m / &gt;20m)</li>
+            <li>1-click <strong>86 / Sold Out</strong> menu toggle</li>
+          </ul>
+        </div>
+
+        <div class="card" style="border-top:5px solid #2563eb">
+          <span class="pill pill-blue">PIN 2222</span>
+          <h3 style="margin:10px 0 8px;font-size:18px">Billing Counter</h3>
+          <ul class="clean">
+            <li>Live Floor + Takeaway Parcel orders</li>
+            <li>Table Transfer (move empty table)</li>
+            <li>Auto CGST + SGST &amp; Round-Off</li>
+            <li>Cash, UPI, Card &amp; Split settlement</li>
+            <li>80mm / 58mm Thermal Bill &amp; Reprint</li>
+          </ul>
+        </div>
+
+        <div class="card" style="border-top:5px solid #7c3aed">
+          <span class="pill pill-purple">PIN 1111</span>
+          <h3 style="margin:10px 0 8px;font-size:18px">Owner Control</h3>
+          <ul class="clean">
+            <li>Today / 7-Day / Monthly Sales KPIs</li>
+            <li>Cash vs UPI vs Card exact tally</li>
+            <li>Top Dishes &amp; Waiter Performance</li>
+            <li><strong>Anti-Theft Audit Trail</strong> with IP &amp; Reason</li>
+            <li>Menu, Tables, Staff &amp; 1-Click Backup</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="s-foot">
+      <span>Royal Hotel LAN POS — Pitch Deck</span>
+      <span>Slide 5 / 10</span>
+    </div>
+  </section>
+
+  <!-- ==================== SLIDE 6: CLIENT HARDWARE REQUIREMENTS ==================== -->
+  <section class="slide">
+    <div class="s-head">
+      <div>
+        <div class="s-kicker">Low Investment for Hotels</div>
+        <h2 class="s-title">Hardware Required at Client Hotel (Uses Existing Devices)</h2>
+      </div>
+      <span class="s-tag">Zero Lock-In Hardware</span>
+    </div>
+
+    <div class="s-body">
+      <div class="grid-2" style="align-items:center">
+        <div>
+          <table class="tbl">
+            <thead>
+              <tr>
+                <th>Item</th>
+                <th>Role in Setup</th>
+                <th>Est. Cost</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>1 Existing Laptop / PC</strong></td>
+                <td>Counter Billing + Local Server</td>
+                <td class="win">Already Owned</td>
+              </tr>
+              <tr>
+                <td><strong>1 Standard Wi-Fi Router</strong></td>
+                <td>Connects all phones &amp; PC (Static IP)</td>
+                <td class="win">₹0 – ₹1,500</td>
+              </tr>
+              <tr>
+                <td><strong>80mm Thermal Printer</strong></td>
+                <td>USB/LAN Bill &amp; KOT Printing</td>
+                <td><strong>₹3,200 – ₹4,500</strong></td>
+              </tr>
+              <tr>
+                <td><strong>Waiter Smartphones</strong></td>
+                <td>Any Android/iOS Chrome browser</td>
+                <td class="win">₹0 (Existing)</td>
+              </tr>
+              <tr>
+                <td><strong>Kitchen Tablet / Old Phone</strong></td>
+                <td>Optional paperless Live KDS</td>
+                <td>₹0 – ₹6,000 (Opt)</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="card-accent">
+          <h3 style="margin:0 0 12px;font-size:20px;color:#9a3412">Why Owners Love This Hardware Model</h3>
+          <ul class="clean" style="font-size:14.5px">
+            <li><strong>Start under ₹5,000 hardware spend</strong> if they already have a counter laptop &amp; Wi-Fi router.</li>
+            <li><strong>No proprietary POS box lock-in</strong> — runs on standard Windows 10/11 or Ubuntu Linux.</li>
+            <li><strong>Automatic Startup:</strong> Runs as a background Windows Service (<span class="mono">Apache2.4</span>), so staff just turn on the PC and double-click the Desktop App icon.</li>
+            <li><strong>Offline Resilience:</strong> Keep a ₹1,800 mini UPS on the Wi-Fi router so power cuts never interrupt orders!</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="s-foot">
+      <span>Royal Hotel LAN POS — Pitch Deck</span>
+      <span>Slide 6 / 10</span>
+    </div>
+  </section>
+
+  <!-- ==================== SLIDE 7: PRICING PACKAGES ==================== -->
+  <section class="slide">
+    <div class="s-head">
+      <div>
+        <div class="s-kicker">Monetization Strategy</div>
+        <h2 class="s-title">Simple, Affordable 3-Tier Pricing for Indian Hotels</h2>
+      </div>
+      <span class="s-tag">15-Day Free Pilot Available</span>
+    </div>
+
+    <div class="s-body">
+      <div class="grid-3">
+        <div class="card">
+          <span class="pill pill-blue">CAFES &amp; PARCEL POINTS</span>
+          <h3 style="margin:10px 0 4px;font-size:20px">Starter Counter</h3>
+          <div class="price-big mono">₹4,999</div>
+          <div class="price-amc">One-Time Setup • ₹2,000 / year AMC</div>
+          <ul class="clean">
+            <li>Counter Billing &amp; Parcel KOT</li>
+            <li>GST / Non-GST 80mm &amp; 58mm Bill</li>
+            <li>Cash / UPI / Split Payment Tracking</li>
+            <li>Daily &amp; Monthly Sales Excel Export</li>
+            <li>1-Click Database Backup</li>
+          </ul>
+        </div>
+
+        <div class="card-accent" style="transform:scale(1.02)">
+          <span class="pill pill-orange">MOST POPULAR • BEST SELLER</span>
+          <h3 style="margin:10px 0 4px;font-size:20px">Restaurant Pro</h3>
+          <div class="price-big mono" style="color:#ea580c">₹8,999</div>
+          <div class="price-amc">One-Time Setup • ₹3,500 / year AMC</div>
+          <ul class="clean">
+            <li>Everything in Starter Counter</li>
+            <li><strong>Unlimited Waiter Mobile Access</strong></li>
+            <li><strong>Live Kitchen Display (KDS) + Sound</strong></li>
+            <li>Table Map, Transfer &amp; Bill Requests</li>
+            <li><strong>Anti-Theft Audit Trail &amp; Role PINs</strong></li>
+            <li>Full Menu Entry &amp; Staff Training</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <span class="pill pill-purple">TURNKEY COMPLETE KIT</span>
+          <h3 style="margin:10px 0 4px;font-size:20px">Turnkey Hotel Suite</h3>
+          <div class="price-big mono">₹14,999</div>
+          <div class="price-amc">+ Hardware at Actuals • ₹4,500 / yr AMC</div>
+          <ul class="clean">
+            <li>Everything in Restaurant Pro</li>
+            <li>On-Site Router Static IP Setup</li>
+            <li>80mm Thermal Printer Configuration</li>
+            <li>Custom Hotel Logo &amp; UPI QR on Bill</li>
+            <li>Priority Same-Day Local Support</li>
+            <li>Auto-Backup to Google Drive / USB</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="s-foot">
+      <span>Royal Hotel LAN POS — Pitch Deck</span>
+      <span>Slide 7 / 10</span>
+    </div>
+  </section>
+
+  <!-- ==================== SLIDE 8: REVENUE PROJECTION ==================== -->
+  <section class="slide">
+    <div class="s-head">
+      <div>
+        <div class="s-kicker">Financial Projections</div>
+        <h2 class="s-title">12-Month &amp; Year-2 Solo Founder Income Potential</h2>
+      </div>
+      <span class="s-tag">₹0 Cloud Server Cost • ~90%+ Margin</span>
+    </div>
+
+    <div class="s-body">
+      <div class="grid-2" style="align-items:center">
+        <div>
+          <table class="tbl">
+            <thead>
+              <tr>
+                <th>Stage</th>
+                <th>Hotels</th>
+                <th>Setup Fees</th>
+                <th>Annual AMC Pool</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Month 1–2 (Pilot)</strong></td>
+                <td class="mono">2</td>
+                <td class="mono">₹8,000</td>
+                <td class="mono">₹3,500 / yr</td>
+              </tr>
+              <tr>
+                <td><strong>Month 3–6 (Traction)</strong></td>
+                <td class="mono">8</td>
+                <td class="mono">₹64,000</td>
+                <td class="mono">₹28,000 / yr</td>
+              </tr>
+              <tr>
+                <td><strong>Month 7–12 (Year 1)</strong></td>
+                <td class="mono"><strong>20</strong></td>
+                <td class="mono win">₹1,60,000</td>
+                <td class="mono">₹70,000 / yr</td>
+              </tr>
+              <tr>
+                <td><strong>Year 2 (Renew + 20 New)</strong></td>
+                <td class="mono"><strong>40</strong></td>
+                <td class="mono win">₹1,60,000</td>
+                <td class="mono win">₹1,40,000 / yr</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="card" style="margin-top:16px">
+            <strong style="font-size:15px;color:#0f172a">Year-2 Combined Potential: <span style="color:#059669" class="mono">₹3,00,000+ / year</span></strong>
+            <p style="margin:6px 0 0;font-size:13px;color:#475569">
+              With zero monthly AWS/cloud rent and local word-of-mouth between neighboring restaurant owners, recurring AMC renewals build predictable passive income.
+            </p>
+          </div>
+        </div>
+
+        <!-- Crisp SVG Revenue Bar Chart -->
+        <div class="card" style="background:#ffffff">
+          <div style="font-size:14px;font-weight:800;margin-bottom:10px;color:#0f172a">Cumulative Revenue Growth (Setup + Recurring AMC)</div>
+          <svg viewBox="0 0 500 310" width="100%" height="285" xmlns="http://www.w3.org/2000/svg">
+            <line x1="55" y1="255" x2="475" y2="255" stroke="#cbd5e1" stroke-width="2"/>
+            <line x1="55" y1="195" x2="475" y2="195" stroke="#f1f5f9" stroke-width="1"/>
+            <line x1="55" y1="135" x2="475" y2="135" stroke="#f1f5f9" stroke-width="1"/>
+            <line x1="55" y1="75" x2="475" y2="75" stroke="#f1f5f9" stroke-width="1"/>
+
+            <text x="48" y="258" text-anchor="end" font-size="11" fill="#64748b">₹0</text>
+            <text x="48" y="198" text-anchor="end" font-size="11" fill="#64748b">₹1L</text>
+            <text x="48" y="138" text-anchor="end" font-size="11" fill="#64748b">₹2L</text>
+            <text x="48" y="78" text-anchor="end" font-size="11" fill="#64748b">₹3L</text>
+
+            <!-- Bar 1: M1-2 (8k) -->
+            <rect x="85" y="246" width="66" height="9" rx="4" fill="#ea580c"/>
+            <text x="118" y="238" text-anchor="middle" font-size="11.5" font-weight="800" fill="#0f172a">₹8k</text>
+            <text x="118" y="276" text-anchor="middle" font-size="11.5" font-weight="700" fill="#475569">M1–2 (2)</text>
+
+            <!-- Bar 2: M3-6 (64k) -->
+            <rect x="188" y="216" width="66" height="39" rx="5" fill="#ea580c"/>
+            <text x="221" y="208" text-anchor="middle" font-size="11.5" font-weight="800" fill="#0f172a">₹64k</text>
+            <text x="221" y="276" text-anchor="middle" font-size="11.5" font-weight="700" fill="#475569">M3–6 (8)</text>
+
+            <!-- Bar 3: Year 1 (1.6L) -->
+            <rect x="291" y="159" width="66" height="96" rx="5" fill="#ea580c"/>
+            <text x="324" y="150" text-anchor="middle" font-size="12" font-weight="800" fill="#0f172a">₹1.6L</text>
+            <text x="324" y="276" text-anchor="middle" font-size="11.5" font-weight="700" fill="#475569">Year 1 (20)</text>
+
+            <!-- Bar 4: Year 2 (1.6L Setup + 1.4L AMC = 3.0L) -->
+            <rect x="394" y="159" width="66" height="96" rx="4" fill="#ea580c"/>
+            <rect x="394" y="75" width="66" height="84" rx="5" fill="#059669"/>
+            <text x="427" y="66" text-anchor="middle" font-size="12.5" font-weight="900" fill="#059669">₹3.0L/yr</text>
+            <text x="427" y="276" text-anchor="middle" font-size="11.5" font-weight="700" fill="#475569">Year 2 (40)</text>
+
+            <!-- Legend -->
+            <rect x="120" y="294" width="12" height="12" rx="3" fill="#ea580c"/>
+            <text x="138" y="304" font-size="11.5" font-weight="700" fill="#334155">New Setup Fees</text>
+            <rect x="270" y="294" width="12" height="12" rx="3" fill="#059669"/>
+            <text x="288" y="304" font-size="11.5" font-weight="700" fill="#334155">Recurring Yearly AMC</text>
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <div class="s-foot">
+      <span>Royal Hotel LAN POS — Pitch Deck</span>
+      <span>Slide 8 / 10</span>
+    </div>
+  </section>
+
+  <!-- ==================== SLIDE 9: 5-MINUTE HINGLISH SALES PITCH ==================== -->
+  <section class="slide">
+    <div class="s-head">
+      <div>
+        <div class="s-kicker">Sales Playbook</div>
+        <h2 class="s-title">5-Minute Face-to-Face Pitch &amp; Objection Handling (Hinglish)</h2>
+      </div>
+      <span class="s-tag">Demo Ready Script</span>
+    </div>
+
+    <div class="s-body">
+      <div class="quote-box">
+        <strong>Opening Hook (30s):</strong> "Sir, bade POS software ka har saal ₹12–15 hazaar lagta hai aur internet gaya toh billing atak jati hai. Maine ek <strong>100% offline local POS</strong> banaya hai jo aapke counter laptop par chalta hai — <strong>bina internet ke bhi</strong> waiters phone se order lenge, kitchen mein bell bajegi, counter par GST bill niklega, aur chori pakadne ka poora Audit Log aapke paas rahega!"
+      </div>
+
+      <div class="grid-2">
+        <div class="card">
+          <h3 style="margin:0 0 10px;font-size:16px;color:#ea580c">Live 3-Min Demo Flow (Laptop + Phone)</h3>
+          <ul class="clean">
+            <li><strong>Step 1 (Waiter Phone — PIN 4444):</strong> Table T1 open karo → <span class="mono">PBM</span> + <span class="mono">BN</span> add karke <strong>Send KOT</strong> dabao.</li>
+            <li><strong>Step 2 (Kitchen Screen — PIN 3333):</strong> Chime bell ke saath KOT-001 pop-up dikhao → <strong>Mark Ready</strong> tap karo.</li>
+            <li><strong>Step 3 (Billing Counter — PIN 2222):</strong> GST + Cash/UPI settle karke 80mm Bill preview dikhao.</li>
+            <li><strong>Step 4 (Owner Audit — PIN 1111):</strong> Cancel &amp; Discount ka staff-name audit log dikhao — <em>yahi deal close karta hai!</em></li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <h3 style="margin:0 0 10px;font-size:16px;color:#059669">Winning Answers to Owner Objections</h3>
+          <ul class="clean">
+            <li><strong>"Internet band hua toh?"</strong> → Ye sirf aapke local Wi-Fi router par chalta hai; fiber cut mein bhi 100% chalta rahega.</li>
+            <li><strong>"Waiters ke liye naya phone?"</strong> → Nahi sir, unke apne mobile browser mein 5 second mein chal jayega.</li>
+            <li><strong>"PC kharab hua toh data?"</strong> → 1-click daily backup pendrive ya Google Drive mein save hota hai.</li>
+            <li><strong>"Soch ke batate hain"</strong> → "Sir 15 din <strong>FREE pilot</strong> chala ke dekhiye — pasand aaye tabhi pay karna!"</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="s-foot">
+      <span>Royal Hotel LAN POS — Pitch Deck</span>
+      <span>Slide 9 / 10</span>
+    </div>
+  </section>
+
+  <!-- ==================== SLIDE 10: 30-DAY EXECUTION ROADMAP ==================== -->
+  <section class="slide">
+    <div class="s-head">
+      <div>
+        <div class="s-kicker">Action Plan</div>
+        <h2 class="s-title">30-Day Go-To-Market &amp; Pilot Launch Roadmap</h2>
+      </div>
+      <span class="s-tag">From MVP to First Paying Clients</span>
+    </div>
+
+    <div class="s-body">
+      <div class="grid-4" style="margin-bottom:22px">
+        <div class="card" style="border-top:5px solid #ea580c">
+          <div class="step-badge">W1</div>
+          <h3 style="margin:0 0 8px;font-size:17px">Week 1: Polish</h3>
+          <ul class="clean">
+            <li>Test live on Apache Port <span class="mono">6808</span></li>
+            <li>Add Half/Full dish variants</li>
+            <li>Add Parcel packing charges</li>
+            <li>Add UPI QR on thermal bill</li>
+          </ul>
+        </div>
+
+        <div class="card" style="border-top:5px solid #2563eb">
+          <div class="step-badge" style="background:#2563eb">W2</div>
+          <h3 style="margin:0 0 8px;font-size:17px">Week 2: Free Pilot</h3>
+          <ul class="clean">
+            <li>Install free at 1 local cafe / restaurant</li>
+            <li>Configure Static IP on router</li>
+            <li>Enter their real menu &amp; staff PINs</li>
+            <li>Train waiters in 10 minutes</li>
+          </ul>
+        </div>
+
+        <div class="card" style="border-top:5px solid #7c3aed">
+          <div class="step-badge" style="background:#7c3aed">W3</div>
+          <h3 style="margin:0 0 8px;font-size:17px">Week 3: Tune &amp; Proof</h3>
+          <ul class="clean">
+            <li>Fix rush-hour friction points</li>
+            <li>Add direct silent thermal print</li>
+            <li>Set up nightly auto-backup</li>
+            <li>Shoot 60-sec live demo video</li>
+          </ul>
+        </div>
+
+        <div class="card-accent" style="border-top:5px solid #059669">
+          <div class="step-badge" style="background:#059669">W4</div>
+          <h3 style="margin:0 0 8px;font-size:17px">Week 4: Sales Push</h3>
+          <ul class="clean">
+            <li>Visit 15–20 nearby restaurants</li>
+            <li>Show live laptop+phone demo</li>
+            <li>Offer 15-day free trial hook</li>
+            <li>Close first 3–5 paid clients!</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="card-dark" style="display:flex;justify-content:space-between;align-items:center;gap:20px">
+        <div>
+          <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.08em;color:#fb923c;font-weight:800">Ready To Demo Today</div>
+          <div style="font-size:20px;font-weight:900;margin-top:4px">Live Working MVP Built on Laravel 13 + Apache 2.4 + MySQL (Port 6808)</div>
+        </div>
+        <div style="text-align:right;font-size:13px;color:#cbd5e1">
+          <div><strong style="color:#fff">Demo PINs:</strong> Owner <span class="mono">1111</span> • Cashier <span class="mono">2222</span></div>
+          <div>Kitchen <span class="mono">3333</span> • Waiter <span class="mono">4444</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="s-foot">
+      <span>Royal Hotel LAN POS — Pitch Deck</span>
+      <span>Slide 10 / 10</span>
+    </div>
+  </section>
+
+</body>
+</html>

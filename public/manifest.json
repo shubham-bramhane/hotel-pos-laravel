@@ -1,0 +1,17 @@
+{
+  "name": "Royal Hotel POS",
+  "short_name": "Hotel POS",
+  "description": "Offline-First Local LAN Hotel & Restaurant POS (Waiter, Kitchen KDS, Counter Billing & Owner Dashboard)",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0f172a",
+  "theme_color": "#ea580c",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
