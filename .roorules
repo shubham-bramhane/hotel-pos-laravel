@@ -1,0 +1,22 @@
+# Roo Code & Roo Code Nightly Workspace Rules — Royal Hotel & Restaurant Hybrid POS
+
+## 1. Architecture & Stack Context
+- **Framework**: Laravel 13 (`^13.17`) on PHP `8.5` (`C:\xampp\php\php.exe`).
+- **Database**: MySQL (`hotel_pos`, 14 domain tables) in production; in-memory SQLite (`:memory:`) in PHPUnit tests.
+- **Local Web Server**: XAMPP Apache 2.4 on Port `6808` (coexists with Driving School Portal on Port `6707`).
+- **Hybrid 75% Offline / 25% Cloud AI Architecture**:
+  - **75% Offline LAN Core (`POS_MODE=outlet`)**: Waiter Floor (`/waiter`), 3s Live Kitchen KDS (`/kitchen`), Counter Billing (`/counter`), 80mm/58mm Thermal Print (`/print/*`), and Owner Admin (`/owner/*`) must work 100% offline over local Wi-Fi with **zero external CDN dependencies**.
+  - **25% Cloud AI, Nightly Sync & Investor Layer (`POS_MODE=cloud_hub`)**: Checksummed daily snapshots (`daily_analytics_snapshots`), nightly `01:00 AM` signed sync (`php artisan pos:sync-cloud --days=3 --ai` -> `POST /api/cloud/sync`), zero-CDN interactive SVG charts (`public/js/pos-charts.js`), Google Gemini Interactions API `v1` (`gemini-4-hydrogen` with automatic `statistical-engine-v1` offline fallback), and tokenized read-only Investor Portal (`/investor/{token}`).
+
+## 2. Coding, Security & Financial Integrity Rules
+- Wrap all multi-table billing mutations inside `DB::transaction()` in `App\Services\PosService`.
+- Write database-agnostic queries in `AnalyticsService` and `CloudSyncService` (use `whereDate()` rather than MySQL-specific date functions) so all tests pass on SQLite `:memory:` and MySQL.
+- **Zero PII Leakage**: Never expose `orders.customer_phone` or `staff_users.pin_code` in `DailyAnalyticsSnapshot::toSyncPayload()`, `GeminiAnalyticsService` prompts, or `resources/views/investor/report.blade.php`.
+- **Secret Hygiene**: Never echo `cloud_sync_token` or `gemini_api_key` into HTML input `value` attributes, and preserve existing secrets when password fields are submitted blank in `OwnerController::saveSettings()`.
+- **Shell Compatibility**: On Windows PowerShell 5.1, run commands separately or use `; if ($LASTEXITCODE -eq 0) { ... }` instead of bash `&&`.
+
+## 3. Verification & Documentation Synchronization
+- Before finishing any PHP change:
+  1. Run `vendor/bin/pint --dirty --format agent`
+  2. Run `php artisan test --compact`
+- Keep the **15 mandatory documentation files** (`README.md`, `AGENTS.md`, `docs/{prd,design,trd,database,api,implementation-plan,setup,features,security,mcp,integrations,testing-strategy,deployment-plan}.md`) and `.gsd/{SPEC,ROADMAP,STATE,TODO}.md` synchronized whenever routes, schemas, or features change.

@@ -1,0 +1,10 @@
+vendor/
+node_modules/
+storage/logs/
+storage/framework/cache/
+storage/framework/sessions/
+storage/framework/views/
+pitch/video-assets/
+pitch/*.mp4
+.phpunit.result.cache
+database/database.sqlite

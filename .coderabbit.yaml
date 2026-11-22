@@ -1,0 +1,58 @@
+# yaml-language-server: $schema=https://coderabbit.ai/integrations/schema.v2.json
+language: "en-US"
+early_access: false
+tone_instructions: "Be concise, concrete, and focus on financial math accuracy (CGST/SGST/discounts/rounding), offline LAN resilience, RBAC security, and zero-PII investor/cloud sync guarantees."
+
+reviews:
+  profile: "chill"
+  request_changes_workflow: false
+  high_level_summary: true
+  poem: false
+  review_status: true
+  collapse_walkthrough: false
+  auto_review:
+    enabled: true
+    drafts: false
+    base_branches:
+      - main
+  path_filters:
+    - "!vendor/**"
+    - "!node_modules/**"
+    - "!pitch/video-assets/**"
+    - "!storage/**"
+    - "!public/build/**"
+  path_instructions:
+    - path: "app/Services/PosService.php"
+      instructions: |
+        Verify that all billing, KOT, discount, cancellation, table transfer, and settlement operations run inside DB::transaction(), record an immutable AuditLog entry, and calculate CGST/SGST and nearest-rupee round_off accurately.
+    - path: "app/Services/AnalyticsService.php"
+      instructions: |
+        Ensure all queries remain database-agnostic across MySQL and SQLite (prefer whereDate() over raw MySQL date functions) and verify SHA-256 payload_checksum change detection.
+    - path: "app/Services/GeminiAnalyticsService.php"
+      instructions: |
+        Verify that Google Gemini Interactions API v1 calls use strict JSON Schema output, enforce a bounded timeout, never send customer PII (customer_phone or staff pin_code), and cleanly fall back to buildStatisticalFallback() on any error.
+    - path: "app/Services/CloudSyncService.php"
+      instructions: |
+        Verify constant-time token and HMAC-SHA256 signature verification via hash_equals(), idempotent (outlet_id, business_date) snapshot upserts, and offline retry queue state transitions.
+    - path: "resources/views/**"
+      instructions: |
+        Ensure 100% offline LAN compatibility (no external CDN fonts or scripts), proper Blade output escaping, and zero secret echoing in settings forms or PII exposure in investor views.
+    - path: "tests/**"
+      instructions: |
+        Ensure external HTTP calls are isolated with Http::fake() and tests run cleanly on in-memory SQLite.
+
+chat:
+  auto_reply: true
+
+knowledge_base:
+  opt_out: false
+  learnings:
+    scope: "auto"
+  code_guidelines:
+    enabled: true
+    filePatterns:
+      - "AGENTS.md"
+      - "CLAUDE.md"
+      - "PROJECT_RULES.md"
+      - ".roorules"
+      - "docs/*.md"
