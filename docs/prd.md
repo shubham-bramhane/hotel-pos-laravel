@@ -1,4 +1,4 @@
-# Product Requirements Document (PRD) — Royal Hotel & Restaurant Hybrid POS
+# Product Requirements Document (`PRD.md`) — Royal Hotel & Restaurant Hybrid POS
 
 ## 1. Product Overview
 
@@ -50,8 +50,8 @@ It follows a **75% Offline / 25% Cloud AI Hybrid Architecture**:
 
 ## 5. Functional Requirements
 
-### 5.1 75% Offline Core POS (Unchanged Reliability)
-- **PIN Auth & RBAC**: Unique 4–6 digit PINs, deactivated user lockout, strict role route guards.
+### 5.1 75% Offline Core POS
+- **PIN Auth & RBAC**: Unique 4–6 digit PINs, deactivated user lockout, strict role route guards (`pos.auth`).
 - **Waiter Floor & KOTs**: Multi-section table map (`Main Hall`, `AC Family`, `Garden`), Veg/Non-Veg markers, dish short codes, multiple incremental KOTs per order, bill request notifications.
 - **Live Kitchen KDS**: 3-second JSON polling (`/api/kitchen/live`), chime alerts, elapsed timer, stock toggles.
 - **Counter Billing & Printing**: Dine-in & Takeaway Parcel, CGST + SGST calculation, rupee round-off, Cash/UPI/Card/Split payment settlement, 58mm/80mm thermal Bill & KOT printing.
@@ -60,7 +60,7 @@ It follows a **75% Offline / 25% Cloud AI Hybrid Architecture**:
 ### 5.2 25% Cloud AI Analytics, Graphs & Pie Charts (`/owner/analytics`)
 - Date range filtering (`Today`, `7 Days`, `30 Days`, `This Month`, `90 Days`) and Outlet switcher (`All Connected Outlets` or individual branch).
 - **Executive KPIs**: Net Sales Revenue + Period-over-Period Growth %, Settled Bills (Dine-In vs Parcel split), Average Order Value (AOV) + Peak Hour, Traceable Digital Payment Share (UPI + Card %), and Estimated Annualized Run Rate (ARR).
-- **Offline-Capable Interactive Charts**:
+- **Offline-Capable Interactive Charts (`public/js/pos-charts.js`)**:
   - Daily Revenue & Bill Velocity Area/Bar Trend Graph
   - Payment Mode Split Donut/Pie Chart (Cash vs UPI vs Card)
   - Menu Category Mix Donut/Pie Chart + Veg/Non-Veg split
@@ -82,9 +82,45 @@ It follows a **75% Offline / 25% Cloud AI Hybrid Architecture**:
 
 ---
 
-## 6. Success Metrics
+## 6. Key User Flows
+
+```mermaid
+flowchart LR
+    subgraph Floor["1. 75% Offline Dining Floor Flow"]
+        W["Waiter punches KOT on Phone (PIN 4444)"] --> K["Kitchen KDS chimes in 3s (PIN 3333)"]
+        K --> R["Chef marks KOT Ready -> Waiter serves"]
+        R --> B["Waiter taps Request Bill -> Counter alerted"]
+        B --> C["Cashier settles Cash/UPI/Split & prints 80mm Bill (PIN 2222)"]
+    end
+
+    subgraph Cloud["2. 25% Nightly Cloud AI & Investor Flow"]
+        C --> S["01:00 AM Scheduler builds SHA-256 Daily Snapshot"]
+        S --> H["Signed HTTPS POST /api/cloud/sync to Cloud Hub"]
+        H --> A["Google Gemini (or Offline Fallback) generates AI Report"]
+        A --> I["Owner shares /investor/{token} -> Investor prints PDF"]
+    end
+```
+
+---
+
+## 7. Edge Cases & Handling
+
+| Edge Case | System Behavior |
+|---|---|
+| **Internet outage during peak dinner rush** | 100% of Waiter, KDS, Counter, Thermal Print, and Owner SVG Charts continue over local Wi-Fi without interruption. |
+| **Internet outage at `01:00 AM` nightly sync** | `CloudSyncService` catches the network error, marks snapshots `sync_status = 'failed'`, increments `sync_attempts`, and automatically retries all unsynced days on the next run. |
+| **Same-day late order settled after manual sync** | `AnalyticsService::buildDailySnapshot()` detects a changed SHA-256 `payload_checksum` and resets `sync_status` to `pending` so the updated day is re-synced. |
+| **Google Gemini API key missing or quota/503 error** | `GeminiAnalyticsService` automatically falls back to `buildStatisticalFallback()` (`statistical-engine-v1`), returning a deterministic `0–100` Health Score and narrative with zero UI error. |
+| **All items on a KOT are cancelled one by one** | `PosService::cancelOrderItem()` automatically marks the parent KOT `cancelled` and removes it from the active Kitchen KDS queue. |
+| **Guest orders extra items after requesting the bill** | Adding a new KOT to an order in `billing` status automatically returns the order and table to `open` / `occupied` and recalculates CGST/SGST. |
+| **Owner tries to delete an occupied dining table** | `OwnerController::destroyTable()` blocks deletion if `activeOrder()->exists()` and displays a clear error banner. |
+| **Investor opens a revoked or expired `/investor/{token}` link** | `InvestorPortalController` returns HTTP `404` using `resources/views/investor/unavailable.blade.php`. |
+
+---
+
+## 8. Success Metrics
 
 - **Offline Uptime**: 100% uninterrupted billing/KDS operation during WAN outages.
 - **Nightly Sync Reliability**: 100% idempotent daily snapshot delivery with zero duplicate financial records across retries.
 - **Investor Readiness**: Owners can generate and share a verified multi-branch executive link + printable PDF in under 30 seconds.
-- **Test Quality**: 100% automated feature tests passing across both offline POS flows and hybrid AI/sync/investor flows.
+- **Test Quality**: 100% automated feature tests passing across both offline POS flows and hybrid AI/sync/investor flows (**7 feature test suites, 139 assertions**).
